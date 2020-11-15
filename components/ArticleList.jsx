@@ -1,15 +1,5 @@
-## 函数式组件列表
-
-**antd 官网上只有类组件的，照着把他改成了函数式组件**
-
-结合 react-virtualized 实现滚动加载无限长列表，带有虚拟化（virtualization）功能，能够提高数据量大时候长列表的性能。
-
-virtualized 是在大数据列表中应用的一种技术，主要是为了减少不可见区域不必要的渲染从而提高性能，特别是数据量在成千上万条效果尤为明显
-
-```jsx
 import { useState, useEffect } from "react";
 import { List, message, Avatar, Spin } from "antd";
-import Head from 'next/head'
 
 import reqwest from "reqwest";
 
@@ -21,17 +11,15 @@ import InfiniteLoader from "react-virtualized/dist/commonjs/InfiniteLoader";
 const fakeDataUrl =
   "https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo";
 
-const Test2 = () => {
+const ArticleList = (props) => {
   const [data, setData] = useState([]);
   const [loading, SetLoading] = useState(false);
 
   const loadedRowsMap = {};
 
   useEffect(() => {
+    console.log(props.data)
     fetchData((res) => {
-      //   this.setState({
-      //     data: res.results,
-      //   });
       setData(res.results);
     });
   }, []);
@@ -49,29 +37,18 @@ const Test2 = () => {
   };
 
   const handleInfiniteOnLoad = ({ startIndex, stopIndex }) => {
-    // let { data } = this.state;
-    // this.setState({
-    //   loading: true,
-    // });
     SetLoading(true);
     for (let i = startIndex; i <= stopIndex; i++) {
       // 1 means loading
       loadedRowsMap[i] = 1;
     }
     if (data.length > 19) {
-      message.warning("Virtualized List loaded all");
-      //   this.setState({
-      //     loading: false,
-      //   });
+      message.warning("虚拟列表已加载完毕");
       SetLoading(false);
       return;
     }
     fetchData((res) => {
       const data2 = data.concat(res.results);
-    //   this.setState({
-    //     data,
-    //     loading: false,
-    //   });
       setData(data2);
       SetLoading(false);
     });
@@ -80,7 +57,6 @@ const Test2 = () => {
   const isRowLoaded = ({ index }) => !!loadedRowsMap[index];
 
   const renderItem = ({ index, key, style }) => {
-    // const { data } = this.state;
     const item = data[index];
     return (
       <List.Item key={key} style={style}>
@@ -165,11 +141,6 @@ const Test2 = () => {
 
   return (
     <>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <h1>Hello World!</h1>
       <List>
         { <WindowScroller>{infiniteLoader}</WindowScroller>}
         {loading && <Spin className="demo-loading" />}
@@ -178,6 +149,4 @@ const Test2 = () => {
   );
 };
 
-export default Test2;
-
-```
+export default ArticleList;
