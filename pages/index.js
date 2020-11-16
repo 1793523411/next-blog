@@ -5,10 +5,11 @@ import Link from 'next/link'
 import { Button } from 'antd';
 import axios from 'axios'
 
-import ArticleList from '../components/ArticleList'
+import ArticleList from '../components/ArticleList/ArticleList'
+import Footer from '../components/Footer/Footer'
 
-export default function Home({ data }) {
-  const id = data.rows[0].primaryKey[0].value
+export default function Home() {
+  // const id = data.rows[0].primaryKey[0].value
   return (
     <div className={styles.container}>
       <Head>
@@ -16,35 +17,20 @@ export default function Home({ data }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       
-    <ArticleList data={data}/>
+    <ArticleList/>
 
-      <Button type="primary">{data.rows[0].attributes[0].columnValue}</Button>
-      <Link href={`/posts/${111}`}>
-              <a>title</a>
-       </Link>
-       <ul>
-        <li>
-          <Link href="/posts/[id]" as={`/posts/${id}`}>
-            <a>First comment</a>
-          </Link>
-        </li>
-        <li>
-          <Link href="/posts/[id]" as={`/posts/${id}`}>
-            <a>Second comment</a>
-          </Link>
-        </li>
-      </ul>
+<Footer></Footer>
     </div>
   )
 }
 
 
-export async function getStaticProps(context) {
-  const {data} = await axios.get('http://websitearticle.ygjie.icu/getall')
-  console.log(data)
-    return {
-      props: {
-        data,
-      },
-    };
-  }
+// export async function getStaticProps(context) {
+//   const {data} = await axios.get('http://websitearticle.ygjie.icu/getall')
+//   console.log(data.rows)
+//     return {
+//       props: {
+//         data,
+//       },
+//     };
+//   }

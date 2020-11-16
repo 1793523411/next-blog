@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react";
-import { List, message, Avatar, Spin } from "antd";
+import React,{ useState, useEffect } from "react";
+import Link from 'next/link'
+import { List, message, Avatar, Spin ,Space } from "antd";
+
+import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 
 import reqwest from "reqwest";
 
@@ -9,7 +12,7 @@ import VList from "react-virtualized/dist/commonjs/List";
 import InfiniteLoader from "react-virtualized/dist/commonjs/InfiniteLoader";
 
 const fakeDataUrl =
-  "https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo";
+  "http://websitearticle.ygjie.icu/getall";
 
 const ArticleList = (props) => {
   const [data, setData] = useState([]);
@@ -20,7 +23,7 @@ const ArticleList = (props) => {
   useEffect(() => {
     console.log(props.data)
     fetchData((res) => {
-      setData(res.results);
+      setData(res.rows);
     });
   }, []);
 
@@ -48,7 +51,7 @@ const ArticleList = (props) => {
       return;
     }
     fetchData((res) => {
-      const data2 = data.concat(res.results);
+      const data2 = data.concat(res.rows);
       setData(data2);
       SetLoading(false);
     });
@@ -56,18 +59,40 @@ const ArticleList = (props) => {
 
   const isRowLoaded = ({ index }) => !!loadedRowsMap[index];
 
+  const IconText = ({ icon, text }) => (
+    <Space>
+      {React.createElement(icon)}
+      {text}
+    </Space>
+  );
+
   const renderItem = ({ index, key, style }) => {
     const item = data[index];
     return (
-      <List.Item key={key} style={style}>
+      <List.Item
+        key={item.primaryKey[0].value}
+        actions={[
+          <IconText icon={StarOutlined} text={item.attributes[5].columnValue} key="list-vertical-star-o" />,
+          <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+          <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+        ]}
+        extra={
+          <img
+            width={272}
+            alt="logo"
+            src={item.attributes[2].columnValue}
+          />
+        }
+      >
         <List.Item.Meta
-          avatar={
-            <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-          }
-          title={<a href="https://ant.design">{item.name.last}</a>}
-          description={item.email}
+          // avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+          // title={<a href={item.attributes[2].columnValue}>{item.attributes[4].columnValue}</a>}
+          title={ <Link href="/posts/[id]" as={`/posts/${item.primaryKey[0].value}`}>
+          {item.attributes[4].columnValue}
+        </Link>}
+          description={item.attributes[5].columnValue}
         />
-        <div>Content</div>
+       { item.attributes[1].columnValue}
       </List.Item>
     );
   };
@@ -141,8 +166,8 @@ const ArticleList = (props) => {
 
   return (
     <>
-      <List>
-        { <WindowScroller>{infiniteLoader}</WindowScroller>}
+      <List itemLayout="vertical">
+        { data.length > 0&&<WindowScroller>{infiniteLoader}</WindowScroller>}
         {loading && <Spin className="demo-loading" />}
       </List>
     </>
