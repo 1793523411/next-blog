@@ -1,4 +1,6 @@
 .footer{
-    height: 10vh;
-    background-color: rgb(209, 79, 79);
+    height: 6vh;
+    background-color: rgba(123, 124, 122, 0);
+    text-align: center;
+    line-height: 6vh;
 }

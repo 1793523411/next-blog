@@ -5,14 +5,18 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next -p 5006"
   },
   "dependencies": {
     "antd": "^4.8.2",
     "axios": "^0.21.0",
     "highlight.js": "^10.3.2",
+    "lodash": "^4.17.20",
+    "markdown-navbar": "^1.4.3",
     "marked": "^1.2.4",
     "next": "10.0.1",
+    "rc-queue-anim": "^1.8.5",
+    "rc-texty": "^0.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-virtualized": "^9.22.2",

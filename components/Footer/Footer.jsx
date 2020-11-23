@@ -1,9 +1,12 @@
 import Link from "next/link";
-import style from './Footer.module.css'
+import style from "./Footer.module.css";
 export default function Footer() {
   return (
     <div className={style.footer}>
-        这是底部
+      <span>
+        Next.js + Aliyun-Tablestore by
+        跌倒的小黄瓜
+      </span>
     </div>
   );
 }

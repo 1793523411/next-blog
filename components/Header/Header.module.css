@@ -1,0 +1,12 @@
+.header{
+   text-align: center;
+   margin-bottom: 5vh;
+   cursor: pointer;
+   /* background-color: #bce6eb; */
+   /* background-image: linear-gradient(to top,#bce6e07c, #bce6e0 100%); */
+}
+.theme{
+    font-size: large;
+    line-height: 7vh;
+    cursor: pointer;
+}

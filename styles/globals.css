@@ -46,3 +46,22 @@ code {
   margin: 0px 3px;
 
 }
+span::selection,p::selection,pre::selection,input::selection,img::selection,div::selection,li::selection,em::selection,a::selection,br::selection,i::selection,h1::selection,h2::selection,strong::selection,pre::selection,code::selection,article::selection {
+  color:#FFFFFF;
+  background-color:#ffc2f0;
+  text-shadow:none;
+}
+p img{
+  width: 70%;
+}
+
+.html[theme='dark-mode'] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.html[theme='dark-mode'] img {
+  filter: invert(1) hue-rotate(180deg);
+}
+.html[theme='dark-mode'] pre  {
+  filter: invert(1) hue-rotate(180deg);
+}

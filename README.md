@@ -7,9 +7,11 @@
 virtualized 是在大数据列表中应用的一种技术，主要是为了减少不可见区域不必要的渲染从而提高性能，特别是数据量在成千上万条效果尤为明显
 
 ```jsx
-import { useState, useEffect } from "react";
-import { List, message, Avatar, Spin } from "antd";
-import Head from 'next/head'
+import React,{ useState, useEffect } from "react";
+import Link from 'next/link'
+import { List, message, Avatar, Spin ,Space } from "antd";
+
+import { MessageOutlined, LikeOutlined, StarOutlined } from '@ant-design/icons';
 
 import reqwest from "reqwest";
 
@@ -18,21 +20,21 @@ import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer";
 import VList from "react-virtualized/dist/commonjs/List";
 import InfiniteLoader from "react-virtualized/dist/commonjs/InfiniteLoader";
 
-const fakeDataUrl =
-  "https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo";
+import styles from './ArticleList.module.css'
 
-const Test2 = () => {
+const fakeDataUrl =
+  "http://websitearticle.ygjie.icu/getall";
+
+const ArticleList = (props) => {
   const [data, setData] = useState([]);
   const [loading, SetLoading] = useState(false);
 
   const loadedRowsMap = {};
 
   useEffect(() => {
+    console.log(props.data)
     fetchData((res) => {
-      //   this.setState({
-      //     data: res.results,
-      //   });
-      setData(res.results);
+      setData(res.rows);
     });
   }, []);
 
@@ -49,29 +51,18 @@ const Test2 = () => {
   };
 
   const handleInfiniteOnLoad = ({ startIndex, stopIndex }) => {
-    // let { data } = this.state;
-    // this.setState({
-    //   loading: true,
-    // });
     SetLoading(true);
     for (let i = startIndex; i <= stopIndex; i++) {
       // 1 means loading
       loadedRowsMap[i] = 1;
     }
     if (data.length > 19) {
-      message.warning("Virtualized List loaded all");
-      //   this.setState({
-      //     loading: false,
-      //   });
+      message.warning("虚拟列表已加载完毕");
       SetLoading(false);
       return;
     }
     fetchData((res) => {
-      const data2 = data.concat(res.results);
-    //   this.setState({
-    //     data,
-    //     loading: false,
-    //   });
+      const data2 = data.concat(res.rows);
       setData(data2);
       SetLoading(false);
     });
@@ -79,19 +70,40 @@ const Test2 = () => {
 
   const isRowLoaded = ({ index }) => !!loadedRowsMap[index];
 
+  const IconText = ({ icon, text }) => (
+    <Space>
+      {React.createElement(icon)}
+      {text}
+    </Space>
+  );
+
   const renderItem = ({ index, key, style }) => {
-    // const { data } = this.state;
     const item = data[index];
     return (
-      <List.Item key={key} style={style}>
+      <List.Item
+        key={item.primaryKey[0].value}
+        actions={[
+          <IconText icon={StarOutlined} text={item.attributes[5].columnValue} key="list-vertical-star-o" />,
+          <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+          <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+        ]}
+        extra={
+          <img
+            width={200}
+            alt="logo"
+            src={item.attributes[2].columnValue}
+          />
+        }
+      >
         <List.Item.Meta
-          avatar={
-            <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-          }
-          title={<a href="https://ant.design">{item.name.last}</a>}
-          description={item.email}
+          // avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+          // title={<a href={item.attributes[2].columnValue}>{item.attributes[4].columnValue}</a>}
+          title={ <Link href="/posts/[id]" as={`/posts/${item.primaryKey[0].value}`}>
+          {item.attributes[4].columnValue}
+        </Link>}
+          description={item.attributes[5].columnValue}
         />
-        <div>Content</div>
+       { item.attributes[1].columnValue}
       </List.Item>
     );
   };
@@ -164,20 +176,15 @@ const Test2 = () => {
   );
 
   return (
-    <>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <h1>Hello World!</h1>
-      <List>
-        { <WindowScroller>{infiniteLoader}</WindowScroller>}
+    <div className={styles.articleList}>
+      <List itemLayout="vertical">
+        { data.length > 0&&<WindowScroller>{infiniteLoader}</WindowScroller>}
         {loading && <Spin className="demo-loading" />}
       </List>
-    </>
+    </div>
   );
 };
 
-export default Test2;
+export default ArticleList;
 
 ```
